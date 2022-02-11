@@ -37,6 +37,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: UIScreen.main.bounds)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.backgroundColor = .lightGray
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 5.0
@@ -70,9 +71,21 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         scrollView.delegate = self
         
         mainView.addSubview(scrollView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            scrollView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            scrollView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        ])
+        
+        //mainView.addConstraintsWithFormat(format: "H:|[v0]|", views: scrollView)
+        //mainView.addConstraintsWithFormat(format: "V:|[v0]|", views: scrollView)
+        
+        
         //mainView.addSubview(close)
-        mainView.addConstraintsWithFormat(format: "H:|[v0]|", views: scrollView)
-        mainView.addConstraintsWithFormat(format: "V:|[v0]|", views: scrollView)
         //mainView.addConstraintsWithFormat(format: "H:[v0(24)]-|", views: close)
         //mainView.addConstraintsWithFormat(format: "V:|-16-[v0(24)]", views: close)
         
@@ -101,8 +114,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     @objc private func setupVerticalFrame() {
         squareFrameView.removeFromSuperview()
         scrollView.addSubview(verticalFrameView)
-        verticalFrameView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-        verticalFrameView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
         verticalFrameView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 36).isActive = true
         verticalFrameView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: -86).isActive = true
         verticalFrameView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: -24).isActive = true
@@ -112,7 +123,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        setupVerticalFrame()
+        setupSquareFrame()
+        
         setupBottomBarSizes()
         
     }
@@ -124,7 +136,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         mainView.addSubview(view)
         view.widthAnchor.constraint(equalToConstant: mainView.bounds.width).isActive = true
         view.heightAnchor.constraint(equalToConstant: 64).isActive = true
-        view.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: -16).isActive = true
+        view.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
         
         let sizeOne = UIButton(type: .system)
         sizeOne.setTitle("Vertical", for: .normal)
@@ -145,7 +157,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: sizeOne)
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: sizeTwo)
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: sizeThree)
-        
     }
     
     
