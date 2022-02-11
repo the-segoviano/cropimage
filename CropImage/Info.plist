@@ -58,5 +58,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    
+    <!-- PERMISOS PARA CAMARA/GALERIA -->
+    <key>NSCameraUsageDescription</key>
+    <string>$(PRODUCT_NAME) requires access to the Camera.</string>
+    
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>$(PRODUCT_NAME) requires access to the Photo Library.</string>
+        
 </dict>
 </plist>
