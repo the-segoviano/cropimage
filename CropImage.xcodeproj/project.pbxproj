@@ -10,7 +10,6 @@
 		C6B8A63527B600F90048C0FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B8A63427B600F90048C0FF /* AppDelegate.swift */; };
 		C6B8A63727B600F90048C0FF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B8A63627B600F90048C0FF /* SceneDelegate.swift */; };
 		C6B8A63927B600F90048C0FF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B8A63827B600F90048C0FF /* ViewController.swift */; };
-		C6B8A63C27B600F90048C0FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6B8A63A27B600F90048C0FF /* Main.storyboard */; };
 		C6B8A63E27B601060048C0FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6B8A63D27B601060048C0FF /* Assets.xcassets */; };
 		C6B8A64127B601060048C0FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6B8A63F27B601060048C0FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -20,7 +19,6 @@
 		C6B8A63427B600F90048C0FF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C6B8A63627B600F90048C0FF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		C6B8A63827B600F90048C0FF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		C6B8A63B27B600F90048C0FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C6B8A63D27B601060048C0FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C6B8A64027B601060048C0FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C6B8A64227B601060048C0FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,7 +57,6 @@
 				C6B8A63427B600F90048C0FF /* AppDelegate.swift */,
 				C6B8A63627B600F90048C0FF /* SceneDelegate.swift */,
 				C6B8A63827B600F90048C0FF /* ViewController.swift */,
-				C6B8A63A27B600F90048C0FF /* Main.storyboard */,
 				C6B8A63D27B601060048C0FF /* Assets.xcassets */,
 				C6B8A63F27B601060048C0FF /* LaunchScreen.storyboard */,
 				C6B8A64227B601060048C0FF /* Info.plist */,
@@ -126,7 +123,6 @@
 			files = (
 				C6B8A64127B601060048C0FF /* LaunchScreen.storyboard in Resources */,
 				C6B8A63E27B601060048C0FF /* Assets.xcassets in Resources */,
-				C6B8A63C27B600F90048C0FF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,14 +142,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		C6B8A63A27B600F90048C0FF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C6B8A63B27B600F90048C0FF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		C6B8A63F27B601060048C0FF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -288,6 +276,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CropImage/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -295,7 +284,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lsegoviano.dev.CropImage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -306,6 +295,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CropImage/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -313,7 +303,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lsegoviano.dev.CropImage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
