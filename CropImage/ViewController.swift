@@ -13,21 +13,10 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         return self.view
     }
     
-    let close: UIButton = {
-        let image = UIImage(named: "close")
-        let button = UIButton(type: .system)
-        button.setImage(image, for: .normal)
-        button.tintColor = .white
-        button.addTarget(self, action: #selector(cerrar), for: .touchUpInside)
-        button.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
-        button.layer.cornerRadius = 12
-        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        return button
-    }()
-    
     var imageDetail: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "wallpaper") // avatar
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "square") // avatar
         imageView.contentMode = .scaleAspectFit
         imageView.layer.masksToBounds = true
         imageView.clipsToBounds = true
@@ -40,38 +29,27 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.backgroundColor = .lightGray
         scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 5.0
+        scrollView.maximumZoomScale = 3.0
         scrollView.isUserInteractionEnabled = true
         scrollView.alwaysBounceVertical = true
-        scrollView.alwaysBounceHorizontal = true
+        scrollView.alwaysBounceHorizontal = false
         scrollView.flashScrollIndicators()
         scrollView.clipsToBounds = false
         return scrollView
-    }()
-    
-    let squareFrameView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.addBorder()
-        return view
-    }()
-    
-    let verticalFrameView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.addBorder()
-        return view
     }()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView.backgroundColor = .black
-        
+        setupScrollView()
+        setupImageViewContainer()
+        setupBottomBarSizes()
+    }
+    
+    private func setupScrollView(){
         scrollView.delegate = self
-        
         mainView.addSubview(scrollView)
-        
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
             scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
@@ -80,26 +58,34 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             scrollView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             scrollView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
         ])
-        
-        //mainView.addConstraintsWithFormat(format: "H:|[v0]|", views: scrollView)
-        //mainView.addConstraintsWithFormat(format: "V:|[v0]|", views: scrollView)
-        
-        
-        //mainView.addSubview(close)
-        //mainView.addConstraintsWithFormat(format: "H:[v0(24)]-|", views: close)
-        //mainView.addConstraintsWithFormat(format: "V:|-16-[v0(24)]", views: close)
-        
-        scrollView.addSubview(imageDetail)
-        scrollView.addConstraintsWithFormat(format: "H:|[v0(\(ScreenSize.screenWidth))]|", views: imageDetail)
-        scrollView.addConstraintsWithFormat(format: "V:|[v0(\(ScreenSize.screenHeight))]|", views: imageDetail)
-        
-        
-        let tapZoom = UITapGestureRecognizer(target: self, action: #selector(zoomImage))
-        tapZoom.numberOfTapsRequired = 2
-        mainView.addGestureRecognizer(tapZoom)
     }
     
+    private func setupImageViewContainer() {
+        scrollView.addSubview(imageDetail)
+        NSLayoutConstraint.activate([
+            imageDetail.widthAnchor.constraint(equalToConstant: ScreenSize.screenWidth),
+            imageDetail.heightAnchor.constraint(equalToConstant: ScreenSize.screenHeight),
+            imageDetail.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            imageDetail.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
+        ])
+    }
+    
+    
     @objc private func setupSquareFrame() {
+        
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 0.5,
+                       options: .curveEaseOut,
+                       animations: {
+            
+            self.flowHeightVerticalConstraint?.constant = (self.mainView.bounds.width - 32)
+            self.customFrameView.layoutIfNeeded()
+            
+        }, completion: nil)
+        
+        /*
         verticalFrameView.removeFromSuperview()
         let sizeFrame: CGFloat = mainView.bounds.width - 32
         scrollView.addSubview(squareFrameView)
@@ -109,24 +95,63 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         squareFrameView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 16).isActive = true
         squareFrameView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
         squareFrameView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
+        */
     }
     
     @objc private func setupVerticalFrame() {
+        /*
         squareFrameView.removeFromSuperview()
         scrollView.addSubview(verticalFrameView)
         verticalFrameView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 36).isActive = true
         verticalFrameView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: -86).isActive = true
         verticalFrameView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: -24).isActive = true
         verticalFrameView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 24).isActive = true
+        */
+        
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 0.5,
+                       options: .curveEaseOut,
+                       animations: {
+            
+            self.flowHeightVerticalConstraint?.constant = 520
+            self.customFrameView.layoutIfNeeded()
+            
+        }, completion: nil)
+        
     }
+    
+    
+    var flowHeightVerticalConstraint: NSLayoutConstraint?
+    var flowHeightSquareConstraint: NSLayoutConstraint?
+    
+    let customFrameView = CustomFrameView()
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        setupSquareFrame()
+        addZoomTapGesture()
         
-        setupBottomBarSizes()
+        // setupSquareFrame()
+        let sizeFrame: CGFloat = mainView.bounds.width - 32
         
+        scrollView.addSubview(customFrameView)
+        customFrameView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
+        flowHeightVerticalConstraint = customFrameView.heightAnchor.constraint(equalToConstant: sizeFrame)
+        flowHeightVerticalConstraint?.isActive = true
+        
+        customFrameView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: -16).isActive = true
+        customFrameView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 16).isActive = true
+        customFrameView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+        customFrameView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
+    }
+    
+    
+    private func addZoomTapGesture() {
+        let tapZoom = UITapGestureRecognizer(target: self, action: #selector(zoomImage))
+        tapZoom.numberOfTapsRequired = 2
+        mainView.addGestureRecognizer(tapZoom)
     }
     
     private func setupBottomBarSizes() {
@@ -135,7 +160,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .white
         mainView.addSubview(view)
         view.widthAnchor.constraint(equalToConstant: mainView.bounds.width).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 64).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 45).isActive = true
         view.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
         
         let sizeOne = UIButton(type: .system)
@@ -149,14 +174,20 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         let sizeThree = UIButton(type: .system)
         sizeThree.setTitle("Otra", for: .normal)
         
+        let cropButton = UIButton(type: .system)
+        cropButton.setTitle("Crop", for: .normal)
+        
+        
         view.addSubview(sizeOne)
         view.addSubview(sizeTwo)
         view.addSubview(sizeThree)
+        view.addSubview(cropButton)
         
-        view.addConstraintsWithFormat(format: "H:|-[v0(80)]-[v1(80)]-[v2(60)]", views: sizeOne, sizeTwo, sizeThree)
+        view.addConstraintsWithFormat(format: "H:|-[v0(80)]-[v1(80)]-[v2(60)]-(<=8)-[v3]-|", views: sizeOne, sizeTwo, sizeThree, cropButton)
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: sizeOne)
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: sizeTwo)
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: sizeThree)
+        view.addConstraintsWithFormat(format: "V:|-[v0]", views: cropButton)
     }
     
     
@@ -185,50 +216,4 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 
 }
 
-
-
-
-
-extension UIView {
-    func addConstraintsWithFormat(format: String, views: UIView...) {
-        var viewDictionary = [String: UIView]()
-        for (index, view) in views.enumerated() {
-            let key = "v\(index)"
-            viewDictionary[key] = view
-            view.translatesAutoresizingMaskIntoConstraints = false
-        }
-        addConstraints( NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewDictionary) )
-    }
-    
-    /**
-     * Agrega borde a una vista
-     *
-     */
-    func addBorder(borderColor: UIColor = UIColor.red, widthBorder: CGFloat = 1.0) {
-        self.layer.borderColor = borderColor.cgColor
-        self.layer.borderWidth = widthBorder
-    }
-    
-    
-    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
-        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        let mask = CAShapeLayer()
-        mask.path = path.cgPath
-        layer.mask = mask
-    }
-    
-    
-} // UIView
-
-struct ScreenSize {
-    static let screenSize   = UIScreen.main.bounds
-    static let screenWidth  = screenSize.width
-    static let screenHeight = screenSize.height
-    
-    static let width = UIScreen.main.bounds.size.width
-    static let height = UIScreen.main.bounds.size.height
-    static let frame = CGRect(x: 0, y: 0, width: ScreenSize.width, height: ScreenSize.height)
-    static let maxWH = max(ScreenSize.width, ScreenSize.height)
-    
-}
 
