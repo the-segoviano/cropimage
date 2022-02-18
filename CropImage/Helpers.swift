@@ -29,14 +29,6 @@ extension UIView {
     }
     
     
-    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
-        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        let mask = CAShapeLayer()
-        mask.path = path.cgPath
-        layer.mask = mask
-    }
-    
-    
 } // UIView
 
 struct ScreenSize {
@@ -118,7 +110,7 @@ class CustomFrameView: UIView {
         
     }
     
-    let backgroundMarginColor: CGColor = UIColor.darkGray.cgColor
+    let backgroundMarginColor: CGColor = UIColor.white.cgColor
     
     private func addTopAndLeftBorders() {
         let thickness: CGFloat = 1.0
@@ -197,5 +189,29 @@ class CustomFrameView: UIView {
     
     
 } // CustomFrameView
+
+
+
+
+
+class ScaledHeightImageView: UIImageView {
+
+    override var intrinsicContentSize: CGSize {
+
+        if let myImage = self.image {
+            let myImageWidth = myImage.size.width
+            let myImageHeight = myImage.size.height
+            let myViewWidth = self.frame.size.width
+ 
+            let ratio = myViewWidth/myImageWidth
+            let scaledHeight = myImageHeight * ratio
+
+            return CGSize(width: myViewWidth, height: scaledHeight)
+        }
+
+        return CGSize(width: -1.0, height: -1.0)
+    }
+
+}
 
 
