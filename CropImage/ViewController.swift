@@ -18,9 +18,9 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     }
     
     var imageDetail: UIImageView = {
-        let imageView = UIImageView() //
+        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "banner") // avatar, vertical, square, horizontal
+        imageView.image = UIImage(named: "hight") // avatar, vertical, square, horizontal
         imageView.contentMode = .scaleAspectFit
         imageView.layer.masksToBounds = true
         imageView.clipsToBounds = true

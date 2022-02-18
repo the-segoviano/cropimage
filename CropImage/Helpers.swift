@@ -59,12 +59,60 @@ class CustomFrameView: UIView {
     
     var topCornerLeft, topCornerRight, bottomCornerLeft, bottomCornerRight: UIView!
     
+    var horizontallStickTop, verticalStickLeft, verticalStickRight, horizontallStickBottom: UIView!
+    
     func setupView() {
         translatesAutoresizingMaskIntoConstraints = false
-        
+        addBorder(borderColor: .white, widthBorder: 1)
+        setupSticksViews()
         setupCornersViews()
         
     } // setupView
+    
+    
+    private func setupSticksViews() {
+        horizontallStickTop = customCornerView()
+        horizontallStickTop.backgroundColor = UIColor.white
+        verticalStickLeft = customCornerView()
+        verticalStickLeft.backgroundColor = UIColor.white
+        verticalStickRight = customCornerView()
+        verticalStickRight.backgroundColor = UIColor.white
+        horizontallStickBottom = customCornerView()
+        horizontallStickBottom.backgroundColor = UIColor.white
+        
+        addSubview(verticalStickLeft)
+        addSubview(verticalStickRight)
+        addSubview(horizontallStickTop)
+        addSubview(horizontallStickBottom)
+        
+        let whStick: CGFloat = 1
+        let htStick: CGFloat = 1
+        
+        let xAnchor = (UIScreen.main.bounds.size.width/3) - 16
+        
+        NSLayoutConstraint.activate([
+            verticalStickLeft.widthAnchor.constraint(equalToConstant: whStick),
+            verticalStickLeft.topAnchor.constraint(equalTo: topAnchor),
+            verticalStickLeft.bottomAnchor.constraint(equalTo: bottomAnchor),
+            verticalStickLeft.leftAnchor.constraint(equalTo: leftAnchor, constant: xAnchor),
+            
+            verticalStickRight.widthAnchor.constraint(equalToConstant: whStick),
+            verticalStickRight.topAnchor.constraint(equalTo: topAnchor),
+            verticalStickRight.bottomAnchor.constraint(equalTo: bottomAnchor),
+            verticalStickRight.rightAnchor.constraint(equalTo: rightAnchor, constant: -xAnchor),
+            
+            horizontallStickTop.heightAnchor.constraint(equalToConstant: htStick),
+            horizontallStickTop.leftAnchor.constraint(equalTo: leftAnchor),
+            horizontallStickTop.rightAnchor.constraint(equalTo: rightAnchor),
+            horizontallStickTop.topAnchor.constraint(equalTo: topAnchor, constant: xAnchor),
+            
+            horizontallStickBottom.heightAnchor.constraint(equalToConstant: htStick),
+            horizontallStickBottom.leftAnchor.constraint(equalTo: leftAnchor),
+            horizontallStickBottom.rightAnchor.constraint(equalTo: rightAnchor),
+            horizontallStickBottom.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -xAnchor),
+        ])
+    }
+    
     
     private func setupCornersViews() {
         topCornerLeft = customCornerView()
@@ -112,8 +160,10 @@ class CustomFrameView: UIView {
     
     let backgroundMarginColor: CGColor = UIColor.white.cgColor
     
+    let thickness: CGFloat = 2.0
+    
     private func addTopAndLeftBorders() {
-        let thickness: CGFloat = 1.0
+        
         
         let topBorder = CALayer()
         let leftBorder = CALayer()
@@ -130,7 +180,6 @@ class CustomFrameView: UIView {
     
     
     private func addTopAndRightBorders() {
-        let thickness: CGFloat = 1.0
         
         let topBorder = CALayer()
         let rightBorder = CALayer()
@@ -147,7 +196,6 @@ class CustomFrameView: UIView {
     
     
     private func addBottomAndLeftBorders() {
-        let thickness: CGFloat = 1.0
         let bottomBorder = CALayer()
         let leftBorder = CALayer()
         bottomBorder.frame = CGRect(x: 0.0, y: 34.0, width: 48, height: thickness)
@@ -162,7 +210,6 @@ class CustomFrameView: UIView {
     
     
     private func addBottomAndRightBorders() {
-        let thickness: CGFloat = 1.0
         let bottomBorder = CALayer()
         let rightBorder = CALayer()
         
@@ -182,7 +229,6 @@ class CustomFrameView: UIView {
     private func customCornerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        //view.addBorder(borderColor: .red, widthBorder: 1)
         return view
     }
     
