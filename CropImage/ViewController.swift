@@ -171,8 +171,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         gridView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 16).isActive = true
         gridView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
         
-        topAnchorConstraint = gridView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor)
-        topAnchorConstraint?.isActive = true
         
     }
     
