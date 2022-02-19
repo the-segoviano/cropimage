@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0A74077427BEA22B0075F94A /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A74077327BEA22B0075F94A /* Helpers.swift */; };
+		0A74077627C0522A0075F94A /* ImageOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A74077527C0522A0075F94A /* ImageOrientation.swift */; };
+		0A74077827C052430075F94A /* CustomFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A74077727C052430075F94A /* CustomFrameView.swift */; };
 		C6B8A63527B600F90048C0FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B8A63427B600F90048C0FF /* AppDelegate.swift */; };
 		C6B8A63727B600F90048C0FF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B8A63627B600F90048C0FF /* SceneDelegate.swift */; };
 		C6B8A63927B600F90048C0FF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B8A63827B600F90048C0FF /* ViewController.swift */; };
@@ -17,6 +19,8 @@
 
 /* Begin PBXFileReference section */
 		0A74077327BEA22B0075F94A /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		0A74077527C0522A0075F94A /* ImageOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOrientation.swift; sourceTree = "<group>"; };
+		0A74077727C052430075F94A /* CustomFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFrameView.swift; sourceTree = "<group>"; };
 		C6B8A63127B600F90048C0FF /* CropImage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CropImage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6B8A63427B600F90048C0FF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C6B8A63627B600F90048C0FF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +67,8 @@
 				C6B8A63F27B601060048C0FF /* LaunchScreen.storyboard */,
 				C6B8A64227B601060048C0FF /* Info.plist */,
 				0A74077327BEA22B0075F94A /* Helpers.swift */,
+				0A74077527C0522A0075F94A /* ImageOrientation.swift */,
+				0A74077727C052430075F94A /* CustomFrameView.swift */,
 			);
 			path = CropImage;
 			sourceTree = "<group>";
@@ -137,8 +143,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6B8A63927B600F90048C0FF /* ViewController.swift in Sources */,
+				0A74077827C052430075F94A /* CustomFrameView.swift in Sources */,
 				C6B8A63527B600F90048C0FF /* AppDelegate.swift in Sources */,
 				C6B8A63727B600F90048C0FF /* SceneDelegate.swift in Sources */,
+				0A74077627C0522A0075F94A /* ImageOrientation.swift in Sources */,
 				0A74077427BEA22B0075F94A /* Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

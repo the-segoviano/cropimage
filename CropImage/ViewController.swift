@@ -7,10 +7,6 @@
 
 import UIKit
 
-enum ImageOrientation {
-    case Portrait, Landscape, Square, unknown
-}
-
 class ViewController: UIViewController, UIScrollViewDelegate {
 
     var mainView: UIView {
@@ -18,12 +14,11 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     }
     
     var imageDetail: UIImageView = {
-        let imageView = UIImageView()
+        let imageView = ScaledHeightImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "hight") // avatar, vertical, square, horizontal
-        imageView.contentMode = .scaleAspectFit
-        imageView.layer.masksToBounds = true
-        imageView.clipsToBounds = true
+        imageView.image = UIImage(named: "vertical") // avatar, vertical, square, horizontal
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true // True para que la imagen respete los limites del Contenedor
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -36,12 +31,15 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         scrollView.maximumZoomScale = 3.0
         scrollView.isUserInteractionEnabled = true
         scrollView.alwaysBounceVertical = true
-        scrollView.alwaysBounceHorizontal = false
+        scrollView.alwaysBounceHorizontal = true
         scrollView.flashScrollIndicators()
         scrollView.clipsToBounds = true // <!-- ¡IMPORTANT! -->
         return scrollView
     }()
     
+    //
+    // Lifecycle
+    //
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,53 +48,61 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         setupImageViewContainer()
         setupBottomBarSizes()
         
-        let orientation: ImageOrientation = validateImageOrientation(forImage: imageDetail.image!)
-        print(" orientation ", orientation)
+        // let orientation: Orientation = ImageOrientation.shared.validate(forImage: imageDetail.image!)
+        // print(" orientation ", orientation)
     }
     
     
-    private func validateImageOrientation(forImage image: UIImage) -> ImageOrientation {
-        if image.size.width > image.size.height {
-            return .Landscape
-        }
-        if image.size.height > image.size.width {
-            return .Portrait
-        }
-        if image.size.height == image.size.width {
-            return .Square
-        }
-        return .unknown
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        addZoomTapGesture()
+        
+        // Configura Grid
+        setupGridOverView()
     }
     
     
+    //
+    // MARK: Setup views
+    //
+    let topMargin: CGFloat = 32
+    let bottomMargin: CGFloat = -64
     private func setupScrollView(){
         scrollView.delegate = self
         mainView.addSubview(scrollView)
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 32),
+            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: topMargin),
             scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 8),
             scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -8),
-            scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -64),
+            scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: bottomMargin),
             scrollView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         ])
     }
     
     private func setupImageViewContainer() {
+        // imageDetail.addBorder(borderColor: .purple, widthBorder: 2.0)
+        
         scrollView.addSubview(imageDetail)
         NSLayoutConstraint.activate([
-            //imageDetail.widthAnchor.constraint(equalToConstant: ScreenSize.screenWidth),
-            //imageDetail.heightAnchor.constraint(equalToConstant: ScreenSize.screenHeight),
+            
             imageDetail.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             imageDetail.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
-            imageDetail.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            imageDetail.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
-            imageDetail.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            imageDetail.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            //imageDetail.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            //imageDetail.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+            
+            imageDetail.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
+            imageDetail.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8),
+            imageDetail.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 8),
+            imageDetail.rightAnchor.constraint(equalTo: scrollView.rightAnchor, constant: -8)
+            
         ])
     }
     
-    
-    @objc private func setupSquareFrame() {
+    //
+    // MARK: - Funciones para ajustar Grid
+    //
+    @objc private func setupSquareGrid() {
         UIView.animate(withDuration: 0.5,
                        delay: 0,
                        usingSpringWithDamping: 0.5,
@@ -105,13 +111,13 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                        animations: {
             
             self.flowHeightVerticalConstraint?.constant = (self.mainView.bounds.width - 32)
-            self.customFrameView.layoutIfNeeded()
+            self.gridView.layoutIfNeeded()
             
         }, completion: nil)
     }
     
     
-    @objc private func setupVerticalFrame() {
+    @objc private func setupVerticalGrid() {
         UIView.animate(withDuration: 0.5,
                        delay: 0,
                        usingSpringWithDamping: 0.5,
@@ -119,16 +125,16 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                        options: .curveEaseOut,
                        animations: {
             
-            self.flowHeightVerticalConstraint?.constant = 520
+            self.flowHeightVerticalConstraint?.constant = self.imageDetail.bounds.height - 32
             
-            self.customFrameView.layoutIfNeeded()
+            self.gridView.layoutIfNeeded()
             
             
         }, completion: nil)
     }
     
     
-    @objc private func setupHorizontalFrame() {
+    @objc private func setupHorizontalGrid() {
         UIView.animate(withDuration: 0.5,
                        delay: 0,
                        usingSpringWithDamping: 0.5,
@@ -137,37 +143,37 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                        animations: {
             
             self.flowHeightVerticalConstraint?.constant = (self.mainView.bounds.width - 32) / 2
-            self.customFrameView.layoutIfNeeded()
+            self.gridView.layoutIfNeeded()
+            
+            //self?.topAnchorConstraint?
             
         }, completion: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        addZoomTapGesture()
-        
-        initialImageViewSetup()
     }
     
     
     var flowHeightVerticalConstraint: NSLayoutConstraint?
     
-    let customFrameView = CustomFrameView()
+    var topAnchorConstraint: NSLayoutYAxisAnchor? // NSLayoutXAxisAnchor
     
-    private func initialImageViewSetup() {
+    let gridView = CustomFrameView()
+    
+    private func setupGridOverView() {
         let sizeFrame: CGFloat = mainView.bounds.width - 32
         
-        scrollView.addSubview(customFrameView)
+        scrollView.addSubview(gridView)
         
-        customFrameView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
-        flowHeightVerticalConstraint = customFrameView.heightAnchor.constraint(equalToConstant: sizeFrame)
+        flowHeightVerticalConstraint = gridView.heightAnchor.constraint(equalToConstant: sizeFrame)
         flowHeightVerticalConstraint?.isActive = true
         
-        customFrameView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: -16).isActive = true
-        customFrameView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 16).isActive = true
-        customFrameView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-        customFrameView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
+        //gridView.heightAnchor.constraint(equalToConstant: sizeFrame).isActive = true
+        gridView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
+        gridView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: -16).isActive = true
+        gridView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 16).isActive = true
+        gridView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+        
+        topAnchorConstraint = gridView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor)
+        topAnchorConstraint?.isActive = true
+        
     }
     
     
@@ -176,6 +182,19 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         tapZoom.numberOfTapsRequired = 2
         mainView.addGestureRecognizer(tapZoom)
     }
+    
+    @objc func zoomImage(_ recognizer: UITapGestureRecognizer) {
+        if (scrollView.zoomScale > scrollView.minimumZoomScale) {
+            scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
+        }
+        else {
+            scrollView.setZoomScale(scrollView.maximumZoomScale, animated: true)
+        }
+    }
+    
+    //
+    // MARK: - Bottom Bar
+    //
     
     private func setupBottomBarSizes() {
         let view = UIView()
@@ -190,19 +209,18 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
         let sizeOne = UIButton(type: .system)
         sizeOne.setTitle("Vertical", for: .normal)
-        sizeOne.addTarget(self, action: #selector(setupVerticalFrame), for: .touchUpInside)
+        sizeOne.addTarget(self, action: #selector(setupVerticalGrid), for: .touchUpInside)
         
         let sizeTwo = UIButton(type: .system)
         sizeTwo.setTitle("Cuadrada", for: .normal)
-        sizeTwo.addTarget(self, action: #selector(setupSquareFrame), for: .touchUpInside)
+        sizeTwo.addTarget(self, action: #selector(setupSquareGrid), for: .touchUpInside)
         
         let sizeThree = UIButton(type: .system)
         sizeThree.setTitle("Horizontal", for: .normal)
-        sizeThree.addTarget(self, action: #selector(setupHorizontalFrame), for: .touchUpInside)
+        sizeThree.addTarget(self, action: #selector(setupHorizontalGrid), for: .touchUpInside)
         
         let cropButton = UIButton(type: .system)
         cropButton.setTitle("Crop", for: .normal)
-        
         
         view.addSubview(sizeOne)
         view.addSubview(sizeTwo)
@@ -217,19 +235,36 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     }
     
     
+    //
+    // MARK: - Delegate Scrollview
+    //
+    
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.imageDetail
     }
     
-    @objc func zoomImage(_ recognizer: UITapGestureRecognizer) {
-        if (scrollView.zoomScale > scrollView.minimumZoomScale) {
-            scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
-        }
-        else {
-            scrollView.setZoomScale(scrollView.maximumZoomScale, animated: true)
+    /*
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        hideGrid()
+    }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            showGrid()
+        } else {
+            hideGrid()
         }
     }
-
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        showGrid()
+    }
+    func showGrid() {
+        gridView.isHidden = false
+    }
+    func hideGrid() {
+        gridView.isHidden = true
+    }
+    */
+    
 }
 
 
