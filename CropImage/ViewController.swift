@@ -150,9 +150,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
     
-    
-    var flowHeightVerticalConstraint: NSLayoutConstraint?
-    
     let squareGridView = CustomFrameView()
     
     let verticalGridView = CustomFrameView()
@@ -162,17 +159,13 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     private func setupGridOverView() {
         let sizeFrame: CGFloat = mainView.bounds.width - 32
-        
         scrollView.addSubview(squareGridView)
-        
-        flowHeightVerticalConstraint = squareGridView.heightAnchor.constraint(equalToConstant: sizeFrame)
-        flowHeightVerticalConstraint?.isActive = true
+        squareGridView.heightAnchor.constraint(equalToConstant: sizeFrame).isActive = true
         squareGridView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
         squareGridView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: -16).isActive = true
         squareGridView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 16).isActive = true
         squareGridView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
         squareGridView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
-        
     }
     
     private func setupVerticalGridView() {
@@ -273,27 +266,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         return self.imageDetail
     }
     
-    /*
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        hideGrid()
-    }
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if !decelerate {
-            showGrid()
-        } else {
-            hideGrid()
-        }
-    }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        showGrid()
-    }
-    func showGrid() {
-        gridView.isHidden = false
-    }
-    func hideGrid() {
-        gridView.isHidden = true
-    }
-    */
     
 }
 
