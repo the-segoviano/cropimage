@@ -58,16 +58,24 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
         addZoomTapGesture()
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
         // Configura Grid
-        setupGridOverView()
+        // setupGridOverView()
+        setupVerticalGridView()
     }
     
     
     //
     // MARK: Setup views
     //
+    
     let topMargin: CGFloat = 32
     let bottomMargin: CGFloat = -64
+    
     private func setupScrollView(){
         scrollView.delegate = self
         mainView.addSubview(scrollView)
@@ -81,21 +89,14 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setupImageViewContainer() {
-        // imageDetail.addBorder(borderColor: .purple, widthBorder: 2.0)
-        
         scrollView.addSubview(imageDetail)
         NSLayoutConstraint.activate([
-            
             imageDetail.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             imageDetail.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
-            //imageDetail.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            //imageDetail.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
-            
             imageDetail.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
             imageDetail.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -8),
             imageDetail.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 8),
             imageDetail.rightAnchor.constraint(equalTo: scrollView.rightAnchor, constant: -8)
-            
         ])
     }
     
@@ -110,8 +111,9 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                        options: .curveEaseOut,
                        animations: {
             
-            self.flowHeightVerticalConstraint?.constant = (self.mainView.bounds.width - 32)
-            self.gridView.layoutIfNeeded()
+            self.verticalGridView.removeFromSuperview()
+            self.horizontalGridView.removeFromSuperview()
+            self.setupGridOverView()
             
         }, completion: nil)
     }
@@ -125,10 +127,9 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                        options: .curveEaseOut,
                        animations: {
             
-            self.flowHeightVerticalConstraint?.constant = self.imageDetail.bounds.height - 32
-            
-            self.gridView.layoutIfNeeded()
-            
+            self.squareGridView.removeFromSuperview()
+            self.horizontalGridView.removeFromSuperview()
+            self.setupVerticalGridView()
             
         }, completion: nil)
     }
@@ -142,10 +143,9 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                        options: .curveEaseOut,
                        animations: {
             
-            self.flowHeightVerticalConstraint?.constant = (self.mainView.bounds.width - 32) / 2
-            self.gridView.layoutIfNeeded()
-            
-            //self?.topAnchorConstraint?
+            self.squareGridView.removeFromSuperview()
+            self.verticalGridView.removeFromSuperview()
+            self.setupHorizontalGridView()
             
         }, completion: nil)
     }
@@ -153,26 +153,58 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     var flowHeightVerticalConstraint: NSLayoutConstraint?
     
-    var topAnchorConstraint: NSLayoutYAxisAnchor? // NSLayoutXAxisAnchor
+    let squareGridView = CustomFrameView()
     
-    let gridView = CustomFrameView()
+    let verticalGridView = CustomFrameView()
+    
+    let horizontalGridView = CustomFrameView()
+    
     
     private func setupGridOverView() {
         let sizeFrame: CGFloat = mainView.bounds.width - 32
         
-        scrollView.addSubview(gridView)
+        scrollView.addSubview(squareGridView)
         
-        flowHeightVerticalConstraint = gridView.heightAnchor.constraint(equalToConstant: sizeFrame)
+        flowHeightVerticalConstraint = squareGridView.heightAnchor.constraint(equalToConstant: sizeFrame)
         flowHeightVerticalConstraint?.isActive = true
-        
-        //gridView.heightAnchor.constraint(equalToConstant: sizeFrame).isActive = true
-        gridView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
-        gridView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: -16).isActive = true
-        gridView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 16).isActive = true
-        gridView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-        
+        squareGridView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
+        squareGridView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: -16).isActive = true
+        squareGridView.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 16).isActive = true
+        squareGridView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+        squareGridView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
         
     }
+    
+    private func setupVerticalGridView() {
+        scrollView.addSubview(verticalGridView)
+        
+        let sizeFrame: CGFloat = mainView.bounds.width - 32
+        
+        verticalGridView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
+        
+        verticalGridView.centerXAnchor.constraint(equalTo: self.mainView.centerXAnchor).isActive = true
+        verticalGridView.centerYAnchor.constraint(equalTo: self.mainView.centerYAnchor).isActive = true
+        verticalGridView.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: self.topMargin + 16).isActive = true
+        verticalGridView.bottomAnchor.constraint(equalTo: self.mainView.bottomAnchor, constant: -72).isActive = true
+    }
+    
+    
+    private func setupHorizontalGridView() {
+        
+        scrollView.addSubview(horizontalGridView)
+        
+        let sizeFrame: CGFloat = mainView.bounds.width - 32
+        let sizeHeight: CGFloat = (mainView.bounds.width - 32) / 2
+        
+        
+        horizontalGridView.heightAnchor.constraint(equalToConstant: sizeHeight).isActive = true
+        horizontalGridView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
+        
+        horizontalGridView.centerXAnchor.constraint(equalTo: self.mainView.centerXAnchor).isActive = true
+        horizontalGridView.centerYAnchor.constraint(equalTo: self.mainView.centerYAnchor).isActive = true
+    }
+    
+    
     
     
     private func addZoomTapGesture() {
