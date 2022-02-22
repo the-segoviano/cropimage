@@ -9,9 +9,17 @@ import UIKit
 
 class CropImageViewController: UIViewController, UIScrollViewDelegate {
 
+    //
+    // Scope
+    //
     var mainView: UIView {
         return self.view
     }
+    
+    static let imageDetailTag: Int = 1357911
+    static let squareGridTag: Int = 1357901
+    static let verticalGridTag: Int = 1357902
+    static let horizontalGridTag: Int = 1357903
     
     var imageDetail: UIImageView = {
         let imageView = ScaledHeightImageView()
@@ -20,6 +28,7 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true // True para que la imagen respete los limites del Contenedor
         imageView.isUserInteractionEnabled = true
+        imageView.tag = CropImageViewController.imageDetailTag
         return imageView
     }()
     
@@ -158,6 +167,7 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
     
     
     private func setupGridOverView() {
+        squareGridView.tag = CropImageViewController.squareGridTag
         let sizeFrame: CGFloat = mainView.bounds.width - 32
         scrollView.addSubview(squareGridView)
         squareGridView.heightAnchor.constraint(equalToConstant: sizeFrame).isActive = true
@@ -168,13 +178,12 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
         squareGridView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
     }
     
+    
     private func setupVerticalGridView() {
+        verticalGridView.tag = CropImageViewController.verticalGridTag
         scrollView.addSubview(verticalGridView)
-        
         let sizeFrame: CGFloat = mainView.bounds.width - 32
-        
         verticalGridView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
-        
         verticalGridView.centerXAnchor.constraint(equalTo: self.mainView.centerXAnchor).isActive = true
         verticalGridView.centerYAnchor.constraint(equalTo: self.mainView.centerYAnchor).isActive = true
         verticalGridView.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: self.topMargin + 16).isActive = true
@@ -183,16 +192,12 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
     
     
     private func setupHorizontalGridView() {
-        
+        horizontalGridView.tag = CropImageViewController.horizontalGridTag
         scrollView.addSubview(horizontalGridView)
-        
         let sizeFrame: CGFloat = mainView.bounds.width - 32
         let sizeHeight: CGFloat = (mainView.bounds.width - 32) / 2
-        
-        
         horizontalGridView.heightAnchor.constraint(equalToConstant: sizeHeight).isActive = true
         horizontalGridView.widthAnchor.constraint(equalToConstant: sizeFrame).isActive = true
-        
         horizontalGridView.centerXAnchor.constraint(equalTo: self.mainView.centerXAnchor).isActive = true
         horizontalGridView.centerYAnchor.constraint(equalTo: self.mainView.centerYAnchor).isActive = true
     }
@@ -244,6 +249,7 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
         
         let cropButton = UIButton(type: .system)
         cropButton.setTitle("Crop", for: .normal)
+        cropButton.addTarget(self, action: #selector(cropImage), for: .touchUpInside)
         
         view.addSubview(sizeOne)
         view.addSubview(sizeTwo)
@@ -255,6 +261,27 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: sizeTwo)
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: sizeThree)
         view.addConstraintsWithFormat(format: "V:|-[v0]", views: cropButton)
+    }
+    
+    
+    @objc private func cropImage() {
+        
+        if let imageView: UIImageView = mainView.viewWithTag(CropImageViewController.imageDetailTag) as? UIImageView {
+            print(" imageView ", imageView.frame, imageView.bounds, "\n")
+        }
+        
+        if let squareGridView: UIView = mainView.viewWithTag(CropImageViewController.squareGridTag) {
+            print(" squareGridView ", squareGridView.frame, squareGridView.bounds, "\n")
+        }
+        
+        if let verticalGridView: UIView = mainView.viewWithTag(CropImageViewController.verticalGridTag) {
+            print(" verticalGridView ", verticalGridView.frame, verticalGridView.bounds, "\n")
+        }
+        
+        if let horizontalGridView: UIView = mainView.viewWithTag(CropImageViewController.horizontalGridTag) {
+            print(" verticalGridView ", horizontalGridView.frame, horizontalGridView.bounds, "\n")
+        }
+        
     }
     
     
