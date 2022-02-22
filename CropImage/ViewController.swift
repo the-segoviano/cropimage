@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIScrollViewDelegate {
+class CropImageViewController: UIViewController, UIScrollViewDelegate {
 
     var mainView: UIView {
         return self.view
@@ -150,11 +150,11 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
     
-    let squareGridView = CustomFrameView()
+    let squareGridView = CustomGridView()
     
-    let verticalGridView = CustomFrameView()
+    let verticalGridView = CustomGridView()
     
-    let horizontalGridView = CustomFrameView()
+    let horizontalGridView = CustomGridView()
     
     
     private func setupGridOverView() {

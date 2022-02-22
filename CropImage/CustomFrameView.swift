@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomFrameView: UIView {
+class CustomGridView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)

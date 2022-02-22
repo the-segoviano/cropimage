@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
         
         if let windowScene = scene as? UIWindowScene {
-            let startViewController = ViewController()
+            let startViewController = CropImageViewController()
             window = UIWindow(windowScene: windowScene)
             window?.rootViewController = startViewController
             window?.makeKeyAndVisible()
