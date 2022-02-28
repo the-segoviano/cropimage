@@ -22,10 +22,10 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
     static let horizontalGridTag: Int = 1357903
     
     var imageDetail: UIImageView = {
-        let imageView = ScaledHeightImageView()
+        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "vertical") // avatar, vertical, square, horizontal
-        imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(named: "vertical_2") // avatar, vertical, square, horizontal
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true // True para que la imagen respete los limites del Contenedor
         imageView.isUserInteractionEnabled = true
         imageView.tag = CropImageViewController.imageDetailTag
@@ -35,7 +35,7 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: CGRect.zero)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.backgroundColor = .black
+        scrollView.backgroundColor = .lightGray
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 3.0
         scrollView.isUserInteractionEnabled = true
@@ -50,23 +50,106 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
     // Lifecycle
     //
     
+    var constraintHeight: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView.backgroundColor = .white
-        setupScrollView()
-        setupImageViewContainer()
-        setupBottomBarSizes()
         
-        // let orientation: Orientation = ImageOrientation.shared.validate(forImage: imageDetail.image!)
-        // print(" orientation ", orientation)
+        let widthScreen = self.view.frame.width
+        let heightScreen = self.view.frame.height
+        let halfWidth: CGFloat = widthScreen/2
+        mainView.addSubview(imageDetail); imageDetail.addBorder(borderColor: .red, widthBorder: 2)
+        
+        
+        NSLayoutConstraint.activate([
+            imageDetail.centerXAnchor.constraint(equalTo: mainView.centerXAnchor),
+            imageDetail.centerYAnchor.constraint(equalTo: mainView.centerYAnchor),
+            imageDetail.widthAnchor.constraint(equalToConstant: widthScreen)
+        ])
+        constraintHeight? = imageDetail.heightAnchor.constraint(equalToConstant: widthScreen + halfWidth)
+        constraintHeight?.isActive = true
+        
+        
+    }
+    
+    // Sol. 3
+    private func setupImageViewFromDidLoad_Sol3(){
+        var aspectR: CGFloat = 0.0
+        aspectR = imageDetail.image!.size.width/imageDetail.image!.size.height
+        imageDetail.translatesAutoresizingMaskIntoConstraints = false
+        imageDetail.image = imageDetail.image!
+        imageDetail.contentMode = .scaleAspectFit
+        NSLayoutConstraint.activate([
+            imageDetail.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageDetail.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            imageDetail.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
+            imageDetail.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor),
+            imageDetail.heightAnchor.constraint(equalTo: imageDetail.widthAnchor, multiplier: 1/aspectR)
+        ])
+    }
+    
+    private func setupByScrollView(){
+        let widthScreen = self.view.frame.width
+        let heightScreen = self.view.frame.height
+        let halfWidth: CGFloat = widthScreen/2
+        mainView.addSubview(scrollView); scrollView.addBorder(borderColor: .red, widthBorder: 2)
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 32),
+            scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
+            scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16),
+            scrollView.widthAnchor.constraint(equalToConstant: widthScreen - 32),
+            scrollView.heightAnchor.constraint(equalToConstant: widthScreen + halfWidth)
+        ])
+        scrollView.delegate = self
+        let widthInPointsImage = imageDetail.image!.size.width
+        let heightInPointsImage = imageDetail.image!.size.height
+        
+        if widthScreen > widthInPointsImage && heightScreen > heightInPointsImage {
+            let orientation: Orientation = ImageOrientation.shared.validate(forImage: imageDetail.image!)
+            scrollView.addSubview(imageDetail); imageDetail.addBorder(borderColor: .green, widthBorder: 2)
+            if orientation == .Portrait {
+                imageDetail.contentMode = .scaleAspectFill
+                scrollView.alwaysBounceHorizontal = false
+                NSLayoutConstraint.activate([
+                    imageDetail.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0),
+                    imageDetail.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+                    imageDetail.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
+                    imageDetail.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 0),
+                    imageDetail.rightAnchor.constraint(equalTo: scrollView.rightAnchor, constant: 0),
+                    imageDetail.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
+                ])
+            }
+            if orientation == .Landscape {
+                imageDetail.contentMode = .scaleToFill
+                scrollView.alwaysBounceHorizontal = true
+                scrollView.alwaysBounceVertical = false
+                NSLayoutConstraint.activate([
+                    imageDetail.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+                    imageDetail.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
+                    imageDetail.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 0),
+                    imageDetail.rightAnchor.constraint(equalTo: scrollView.rightAnchor, constant: 0),
+                ])
+            }
+        }
+        else{
+            imageDetail.contentMode = .center
+            scrollView.alwaysBounceHorizontal = true
+            scrollView.alwaysBounceVertical = true
+            scrollView.addSubview(imageDetail); imageDetail.addBorder(borderColor: .blue, widthBorder: 2)
+            NSLayoutConstraint.activate([
+                imageDetail.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0),
+                imageDetail.widthAnchor.constraint(equalToConstant: widthInPointsImage),
+                imageDetail.heightAnchor.constraint(equalToConstant: heightInPointsImage)
+            ])
+            self.scrollView.contentSize.height = heightInPointsImage
+            self.scrollView.contentSize.width = widthInPointsImage
+        }
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        addZoomTapGesture()
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -74,9 +157,41 @@ class CropImageViewController: UIViewController, UIScrollViewDelegate {
         
         // Configura Grid
         // setupGridOverView()
-        setupVerticalGridView()
+        // setupVerticalGridView()
+        
+        
+        
+        /*
+        DispatchQueue.main.async {
+            //self.heightAnchorConstraintImage?.constant = heightInPointsImage
+            //self.heightAnchorConstraintScroll?.constant = heightInPointsImage
+            self.scrollView.layoutIfNeeded()
+        }
+        */
     }
     
+    private func updateImageView_Sol1(){
+        let height = imageDetail.image!.size.height
+        let wisth = imageDetail.image!.size.width
+        let ratio = wisth / height
+        let newHeight = imageDetail.frame.width / ratio
+        constraintHeight?.constant = newHeight
+        view.layoutIfNeeded()
+    }
+    
+    private func updateImageView_Sol2(){
+        if let image = imageDetail.image {
+            let ratio = image.size.width / image.size.height
+            if self.view.frame.width > self.view.frame.height {
+                let newHeight = self.view.frame.width / ratio
+                imageDetail.frame.size = CGSize(width: self.view.frame.width, height: newHeight)
+            }
+            else{
+                let newWidth = self.view.frame.height * ratio
+                imageDetail.frame.size = CGSize(width: newWidth, height: self.view.frame.height)
+            }
+        }
+    }
     
     //
     // MARK: Setup views
